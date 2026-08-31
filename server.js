@@ -437,7 +437,8 @@ Return ONLY a valid JSON object with this exact structure (no markdown tags, no 
 Rules:
 - Include EXACTLY 1 single master hero scene totaling ${duration} seconds.
 - DO NOT create more than 1 scene.
-- Voiceover script MUST be ultra-catchy, energetic, human, and persuasive!`;
+- Voiceover script MUST be ultra-catchy, energetic, human, and persuasive!
+- VISUAL REQUIREMENT: Visual descriptions MUST focus 100% ONLY on the product itself in a studio setting. ABSOLUTELY NO HUMANS, NO PEOPLE, NO MODELS, AND NO GIRLS!`;
 
   const geminiKey = customApiKey || process.env.GEMINI_API_KEY;
   const openRouterKey = customApiKey || process.env.OPENROUTER_API_KEY;
@@ -870,7 +871,7 @@ graphicsQueue.process(async (job) => {
 
       // FIXED SEED ANCHOR: Uses identical seed for all scenes in the project to guarantee matching product & background!
       const projectSeed = ((projectId * 31337) % 899999) + 100000;
-      const ultraPrompt = `crystal clear ultra hd 8k commercial product advertisement photoshoot of ${productName}, scene ${sceneId}: ${visualDescription}, ${colorStyle}, award winning studio photography, pin sharp focus, high contrast, professional 35mm lens, 16:9 widescreen, hyperdetailed`;
+      const ultraPrompt = `crystal clear ultra hd 8k commercial product photoshoot of ${productName}, standalone product focus, no humans, no people, no models, no girl, no face, ${visualDescription}, ${colorStyle}, award winning studio photography, pin sharp focus, high contrast, professional 35mm lens, 16:9 widescreen, hyperdetailed`;
       
       imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(ultraPrompt)}?width=1920&height=1080&model=flux&nologo=true&enhance=true&seed=${projectSeed}`;
 

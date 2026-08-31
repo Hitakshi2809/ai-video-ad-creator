@@ -1230,7 +1230,7 @@
       if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
 
       const projSeed = ((proj.id * 31337) % 899999) + 100000;
-      const masterHeroPrompt = `crystal clear ultra hd 8k commercial hero product photoshoot of ${proj.product_name}, studio lighting, pin sharp focus, 35mm lens, 16:9, hyperdetailed`;
+      const masterHeroPrompt = `crystal clear ultra hd 8k commercial hero product photoshoot of ${proj.product_name}, standalone product focus, no humans, no people, no models, no girl, no face, studio lighting, pin sharp focus, 35mm lens, 16:9, hyperdetailed`;
       const masterHeroUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent(masterHeroPrompt)}?width=1920&height=1080&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
 
       isPlayingAd = true;
@@ -1368,7 +1368,7 @@
       const assetsMap = new Map();
       if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
       const projSeed = ((proj.id * 31337) % 899999) + 100000;
-      const rawMasterUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent('hyperrealistic 8k commercial hero product photoshoot of ' + proj.product_name + ', studio lighting, 35mm lens, 16:9')}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+      const rawMasterUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent('hyperrealistic 8k commercial hero product photoshoot of ' + proj.product_name + ', standalone product focus, no humans, no people, no models, no girl, no face, studio lighting, 35mm lens, 16:9')}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
 
       // Pre-fetch image via proxy to guarantee clean non-tainted canvas
       let preloadedImage = null;
