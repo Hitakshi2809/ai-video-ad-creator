@@ -1285,13 +1285,17 @@
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+        const blob = new Blob(recordedChunks, { type: recordedChunks[0]?.type || 'video/mp4' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${proj.product_name.replace(/\s+/g, '_')}_Video_Commercial.mp4`;
+        const ext = (recordedChunks[0]?.type || '').includes('webm') ? 'webm' : 'mp4';
+        a.download = `${proj.product_name.replace(/\s+/g, '_')}_Video_Commercial.${ext}`;
+        document.body.appendChild(a);
         a.click();
-        showAlert('🎉 MP4 Video Commercial downloaded successfully!', 'success');
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        showAlert('🎉 Video Commercial file downloaded successfully!', 'success');
       };
 
       mediaRecorder.start();
@@ -1337,11 +1341,22 @@
         const scene = scenes[currentSceneIdx];
         const targetImgUrl = isSingleHeroMode ? masterHeroUrl : (assetsMap.get(String(scene.scene_number)) || masterHeroUrl);
 
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
+        let frameDrawn = false;
+        function drawCanvasFrame(loadedImg) {
+          if (frameDrawn) return;
+          frameDrawn = true;
+
           ctx.clearRect(0, 0, 1280, 720);
-          ctx.drawImage(img, 0, 0, 1280, 720);
+
+          if (loadedImg && loadedImg.complete && loadedImg.naturalWidth > 0) {
+            try {
+              ctx.drawImage(loadedImg, 0, 0, 1280, 720);
+            } catch (e) {
+              drawCanvasFallback();
+            }
+          } else {
+            drawCanvasFallback();
+          }
 
           // Subtitle Overlay Bar
           const grad = ctx.createLinearGradient(0, 560, 0, 720);
@@ -1356,7 +1371,7 @@
           ctx.fillText(`🎵 ${scene.music_mood}`, 640, 620);
 
           ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 32px sans-serif';
+          ctx.font = 'bold 30px sans-serif';
           ctx.fillText(`"${scene.voiceover_script}"`, 640, 675);
 
           // Draw Brand Logo Watermark Overlay on Canvas Frame
@@ -1369,7 +1384,8 @@
               const logoW = Math.min(150, logoH * aspect);
               ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
               ctx.beginPath();
-              ctx.roundRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12, 16);
+              if (ctx.roundRect) ctx.roundRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12, 16);
+              else ctx.fillRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12);
               ctx.fill();
               ctx.drawImage(logoImg, 1280 - logoW - 30, 26, logoW, logoH);
             }
@@ -1378,7 +1394,8 @@
             ctx.font = 'bold 20px sans-serif';
             const textWidth = ctx.measureText(proj.product_name).width;
             ctx.beginPath();
-            ctx.roundRect(1280 - textWidth - 50, 20, textWidth + 30, 44, 16);
+            if (ctx.roundRect) ctx.roundRect(1280 - textWidth - 50, 20, textWidth + 30, 44, 16);
+            else ctx.fillRect(1280 - textWidth - 50, 20, textWidth + 30, 44);
             ctx.fill();
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'right';
@@ -1392,36 +1409,32 @@
             currentSceneIdx++;
           }
           requestAnimationFrame(renderNextFrame);
-        };
+        }
 
-        img.onerror = () => {
-          // SVG Fallback Frame
-          ctx.fillStyle = '#1e1b4b';
+        function drawCanvasFallback() {
+          const grad = ctx.createLinearGradient(0, 0, 1280, 720);
+          grad.addColorStop(0, '#0f172a');
+          grad.addColorStop(1, '#1e1b4b');
+          ctx.fillStyle = grad;
           ctx.fillRect(0, 0, 1280, 720);
 
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 48px sans-serif';
+          ctx.fillStyle = '#6366f1';
+          ctx.font = 'bold 44px sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(proj.product_name, 640, 320);
+        }
 
-          ctx.fillStyle = '#60a5fa';
-          ctx.font = 'bold 26px sans-serif';
-          ctx.fillText(`Scene ${scene.scene_number}: ${scene.visual_description.substring(0, 50)}`, 640, 400);
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 30px sans-serif';
-          ctx.fillText(`"${scene.voiceover_script}"`, 640, 660);
-
-          frameInScene++;
-          const sceneMaxFrames = (scene.duration || 4) * fps;
-          if (frameInScene >= sceneMaxFrames) {
-            frameInScene = 0;
-            currentSceneIdx++;
-          }
-          requestAnimationFrame(renderNextFrame);
-        };
-
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => drawCanvasFrame(img);
+        img.onerror = () => drawCanvasFrame(null);
         img.src = targetImgUrl;
+
+        if (img.complete) {
+          drawCanvasFrame(img);
+        } else {
+          setTimeout(() => drawCanvasFrame(null), 1000);
+        }
       }
 
       renderNextFrame();
