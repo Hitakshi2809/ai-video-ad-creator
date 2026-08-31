@@ -479,19 +479,22 @@
     <!-- Header -->
     <header>
       <div>
-        <h1>🎬 FREE AI Ad Creator</h1>
-        <p style="color: #718096; margin-top: 5px;">Generate product videos instantly using 100% Free AI Keys</p>
+        <h1 data-i18n="appTitle">🎬 FREE AI Ad Creator</h1>
+        <p style="color: #718096; margin-top: 5px;" data-i18n="appSubtitle">Generate product videos instantly using 100% Free AI Keys</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <span class="free-badge">✨ 100% Free Mode Active</span>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <button id="uiLangToggleBtn" onclick="toggleUiLanguage()" style="background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; font-weight: 700; padding: 8px 14px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.88rem; transition: all 0.2s ease;">
+          🌐 <span>🇮🇳 हिंदी में बदलें</span>
+        </button>
+        <span class="free-badge" data-i18n="freeBadge">✨ 100% Free Mode Active</span>
         <div class="stats">
           <div class="stat">
             <div class="stat-value" id="stats-total">0</div>
-            <div class="stat-label">Videos Created</div>
+            <div class="stat-label" data-i18n="statTotal">Videos Created</div>
           </div>
           <div class="stat">
             <div class="stat-value" id="stats-completed">0</div>
-            <div class="stat-label">Completed</div>
+            <div class="stat-label" data-i18n="statCompleted">Completed</div>
           </div>
         </div>
       </div>
@@ -506,7 +509,7 @@
       <div>
         <!-- Create Form -->
         <div class="card">
-          <h2>📝 Create Your Free AI Ad</h2>
+          <h2 data-i18n="createCardTitle">📝 Create Your Free AI Ad</h2>
           <form id="create-form">
             <!-- AI Engine & Key Choice -->
             <div class="provider-box">
@@ -531,7 +534,7 @@
             </div>
 
             <div class="form-group">
-              <label for="productName">Product Name *</label>
+              <label for="productName" data-i18n="productNameLabel">Product Name *</label>
               <input
                 type="text"
                 id="productName"
@@ -541,7 +544,7 @@
             </div>
 
             <div class="form-group">
-              <label for="features">Key Features *</label>
+              <label for="features" data-i18n="featuresLabel">Key Features *</label>
               <textarea
                 id="features"
                 placeholder="e.g., 40-hour battery life, IPX7 waterproof, deep bass driver, ergonomic design"
@@ -550,7 +553,7 @@
             </div>
 
             <div class="form-group">
-              <label for="targetAudience">Target Audience</label>
+              <label for="targetAudience" data-i18n="targetAudienceLabel">Target Audience</label>
               <input
                 type="text"
                 id="targetAudience"
@@ -560,7 +563,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
               <div class="form-group">
-                <label for="adLanguage">🌐 Language</label>
+                <label for="adLanguage" data-i18n="languageLabel">🌐 Language</label>
                 <select id="adLanguage">
                   <option value="en">🇬🇧 English</option>
                   <option value="hi">🇮🇳 Hindi (हिंदी / Hinglish)</option>
@@ -568,7 +571,7 @@
               </div>
 
               <div class="form-group">
-                <label for="tone">Tone</label>
+                <label for="tone" data-i18n="toneLabel">Tone</label>
                 <select id="tone">
                   <option value="energetic">Energetic & Punchy</option>
                   <option value="professional">Professional & Sleek</option>
@@ -579,7 +582,7 @@
               </div>
 
               <div class="form-group">
-                <label for="duration">Duration</label>
+                <label for="duration" data-i18n="durationLabel">Duration</label>
                 <select id="duration">
                   <option value="15">15 seconds</option>
                   <option value="30">30 seconds</option>
@@ -590,7 +593,7 @@
 
             <div class="form-group">
               <label for="brandLogoInput" style="display: flex; justify-content: space-between; align-items: center;">
-                <span>🏷️ Brand Logo & Watermark Overlay (Optional)</span>
+                <span data-i18n="logoLabel">🏷️ Brand Logo & Watermark Overlay (Optional)</span>
                 <span id="logoFileName" style="font-size: 0.75rem; color: #10b981; font-weight: 600;"></span>
               </label>
               <input
@@ -602,7 +605,7 @@
               />
             </div>
 
-            <button type="submit" class="btn btn-primary" id="submitBtn">🚀 Create Ad For Free</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" data-i18n="submitBtn">🚀 Create Ad For Free</button>
           </form>
         </div>
 
@@ -613,9 +616,9 @@
       <!-- Sidebar -->
       <aside class="sidebar card">
         <h2 style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <span>📜 Video Ad History</span>
+          <span data-i18n="historyTitle">📜 Video Ad History</span>
         </h2>
-        <input type="text" id="historySearch" placeholder="🔍 Search video history..." oninput="filterHistory()" style="margin-bottom: 15px; padding: 10px; font-size: 0.88rem;" />
+        <input type="text" id="historySearch" placeholder="🔍 Search video history..." data-i18n="searchPlaceholder" oninput="filterHistory()" style="margin-bottom: 15px; padding: 10px; font-size: 0.88rem;" />
         <div class="projects-list" id="projects-list">
           <div class="empty-state">
             <div class="empty-state-icon">📽️</div>
@@ -633,6 +636,78 @@
     let projects = [];
     let currentProjectId = null;
     let uploadedBrandLogoDataUrl = null;
+    let currentUiLang = 'en';
+
+    const uiTranslations = {
+      en: {
+        appTitle: '🎬 FREE AI Ad Creator',
+        appSubtitle: 'Generate product videos instantly using 100% Free AI Keys',
+        freeBadge: '✨ 100% Free Mode Active',
+        statTotal: 'Videos Created',
+        statCompleted: 'Completed',
+        createCardTitle: '📝 Create Your Free AI Ad',
+        productNameLabel: 'Product Name *',
+        featuresLabel: 'Key Features *',
+        targetAudienceLabel: 'Target Audience',
+        languageLabel: '🌐 Target Ad Language',
+        toneLabel: 'Tone',
+        durationLabel: 'Duration',
+        logoLabel: '🏷️ Brand Logo & Watermark Overlay (Optional)',
+        submitBtn: '🚀 Create Ad For Free',
+        historyTitle: '📜 Video Ad History',
+        searchPlaceholder: '🔍 Search video history...',
+        noProjectsText: 'No video ads found in history',
+        langToggleText: '🇮🇳 हिंदी में बदलें',
+      },
+      hi: {
+        appTitle: '🎬 मुफ़्त AI विज्ञापन निर्माता',
+        appSubtitle: '100% मुफ़्त AI तकनीक से तुरंत उत्पाद वीडियो बनाएं',
+        freeBadge: '✨ 100% मुफ़्त मोड सक्रिय',
+        statTotal: 'कुल वीडियो निर्मित',
+        statCompleted: 'पूर्ण वीडियो',
+        createCardTitle: '📝 अपना मुफ़्त AI विज्ञापन बनाएं',
+        productNameLabel: 'उत्पाद का नाम *',
+        featuresLabel: 'प्रमुख विशेषताएं *',
+        targetAudienceLabel: 'लक्ष्य दर्शक',
+        languageLabel: '🌐 विज्ञापन की भाषा',
+        toneLabel: 'शैली / टोन',
+        durationLabel: 'अवधि',
+        logoLabel: '🏷️ ब्रांड लोगो और वॉटरमार्क (ऐच्छिक)',
+        submitBtn: '🚀 मुफ़्त विज्ञापन बनाएं',
+        historyTitle: '📜 वीडियो विज्ञापन इतिहास',
+        searchPlaceholder: '🔍 इतिहास खोजें...',
+        noProjectsText: 'इतिहास में कोई वीडियो विज्ञापन नहीं मिला',
+        langToggleText: '🇬🇧 Switch to English',
+      }
+    };
+
+    function toggleUiLanguage() {
+      currentUiLang = currentUiLang === 'en' ? 'hi' : 'en';
+      applyUiTranslations();
+    }
+
+    function applyUiTranslations() {
+      const t = uiTranslations[currentUiLang];
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t && t[key]) {
+          if (el.tagName === 'INPUT' && el.type === 'text') {
+            el.placeholder = t[key];
+          } else {
+            el.textContent = t[key];
+          }
+        }
+      });
+
+      const toggleBtnSpan = document.querySelector('#uiLangToggleBtn span');
+      if (toggleBtnSpan) toggleBtnSpan.textContent = t.langToggleText;
+
+      const adLangSelect = document.getElementById('adLanguage');
+      if (adLangSelect) adLangSelect.value = currentUiLang;
+
+      filterHistory();
+    }
 
     function handleLogoUpload(event) {
       const file = event.target.files[0];
