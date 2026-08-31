@@ -393,38 +393,43 @@ async function initializeDatabase() {
  * Generate Storyboard using Gemini, OpenRouter, Anthropic, or Free Built-in Template Engine
  */
 async function generateStoryboardAI({ productName, features, targetAudience, tone, duration, customApiKey, provider }) {
-  const prompt = `You are an expert video copywriter and storyboard creator for product advertisements.
+  const prompt = `You are an award-winning Super Bowl & viral commercial copywriter and creative director.
 
-Create a compelling storyboard for a ${duration}-second product advertisement about:
+Create an irresistible, high-converting, viral ${duration}-second commercial script for:
 - Product: ${productName}
-- Key Features: ${features}
-- Target Audience: ${targetAudience}
-- Tone: ${tone}
+- Features: ${features}
+- Audience: ${targetAudience}
+- Tone: ${tone} (make it feel ${tone}, energetic, catchy, and impossible to ignore!)
+
+Copywriting Framework:
+- HOOK: An explosive opening hook line that grabs attention in the first 2 seconds.
+- STORY & PROBLEM: Fast-paced, high-impact narrative highlighting how ${productName} solves problems.
+- VOICE-OVER: Short, rhythmic, ultra-catchy, viral script written for persuasive voiceover delivery.
 
 Return ONLY a valid JSON object with this exact structure (no markdown tags, no extra text):
 {
-  "title": "Engaging video title",
-  "hook": "Opening line that grabs attention",
+  "title": "Unforgettable Commercial Title",
+  "hook": "Explosive Attention-Grabbing Hook",
   "scenes": [
     {
       "scene_number": 1,
-      "duration": 3,
-      "visual_description": "Specific vivid visual details, lighting, and action",
-      "voiceover_script": "Engaging narrator line",
-      "music_mood": "Upbeat/Energetic/Calm/Cinematic",
+      "duration": ${duration},
+      "visual_description": "Vivid 8k master photoshoot detail, studio lighting, sharp focus, 35mm lens, widescreen",
+      "voiceover_script": "Hyper-catchy, rhythmic, viral commercial voiceover script that mesmerizes listeners",
+      "music_mood": "High Energy Beat Drop / Electric Commercial Synth",
       "visual_elements": ["element1", "element2"]
     }
   ],
-  "music_suggestions": ["Genre 1", "Genre 2"],
-  "color_palette": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
-  "key_messages": ["Key message 1", "Key message 2"],
-  "cta": "Call to action text"
+  "music_suggestions": ["Upbeat Commercial Pop", "Viral Bass Synth"],
+  "color_palette": ["#4F46E5", "#10B981", "#F59E0B"],
+  "key_messages": ["Message 1", "Message 2"],
+  "cta": "Irresistible Call to Action"
 }
 
 Rules:
 - Include EXACTLY 1 single master hero scene totaling ${duration} seconds.
 - DO NOT create more than 1 scene.
-- Voiceover must sound human, persuasive, and summarize the product features seamlessly.`;
+- Voiceover script MUST be ultra-catchy, energetic, human, and persuasive!`;
 
   const geminiKey = customApiKey || process.env.GEMINI_API_KEY;
   const openRouterKey = customApiKey || process.env.OPENROUTER_API_KEY;
@@ -513,26 +518,35 @@ Rules:
   // 4. Built-in Smart Free AI Template Generator (100% Free - Works Offline & Without Keys!)
   console.log('🌟 Using Built-in Smart Free AI Generator (No Key Required!)...');
 
-  // 4. Built-in Smart Free AI Template Generator (100% Free - Works Offline & Without Keys!)
-  console.log('🌟 Using Built-in Single Scene Free AI Generator (No Key Required!)...');
+  const toneHooks = {
+    energetic: `Stop scrolling! Meet ${productName}—the game-changer you've been waiting for!`,
+    luxury: `Indulge in pure perfection. Experience ${productName}, crafted for the elite.`,
+    humorous: `Think you've seen it all? Think again! ${productName} is here to blow your mind.`,
+    casual: `Hey there! Ready to make everyday 10x easier with ${productName}?`,
+    professional: `Elevate your standards with ${productName}—engineered for ultimate performance.`,
+  };
+
+  const selectedHook = toneHooks[tone?.toLowerCase()] || `Ready to revolutionize your world with ${productName}?`;
+
+  const catchyScript = `Stop settling for ordinary! ${productName} delivers ultimate power with ${features}. Designed specifically for ${targetAudience} who refuse to compromise. Upgrade your lifestyle with ${productName} today!`;
 
   return {
-    title: `Discover ${productName} - Revolutionize Your Workflow`,
-    hook: `Are you ready to experience ${productName}? The ultimate solution designed for ${targetAudience}.`,
+    title: `🔥 ${productName} Commercial - The Game Changer`,
+    hook: selectedHook,
     scenes: [
       {
         scene_number: 1,
         duration: duration || 15,
         visual_description: `Hyperrealistic 8k master hero commercial photoshoot of ${productName} showcasing ${features} with dramatic studio lighting, 35mm lens, depth of field, and 16:9 widescreen composition.`,
-        voiceover_script: `Meet ${productName}. Built specifically to empower ${targetAudience} with powerful features like ${features}. Transform your experience today!`,
-        music_mood: tone === 'energetic' ? 'Upbeat Synth & Drums' : 'Modern Professional Ambient',
+        voiceover_script: catchyScript,
+        music_mood: tone === 'energetic' ? '⚡ High-Energy Beat Drop & Bass' : '🎶 Cinematic Upbeat Commercial Synth',
         visual_elements: [productName, 'Master Hero Spotlight', 'Cinematic Studio Glow'],
       },
     ],
-    music_suggestions: ['Upbeat Commercial Pop', 'Corporate Ambient Electronic'],
+    music_suggestions: ['Upbeat Commercial Pop', 'Viral Bass Drop Synthwave'],
     color_palette: ['#4F46E5', '#10B981', '#F59E0B'],
-    key_messages: [`Premium quality with ${productName}`, `Tailored for ${targetAudience}`, `Key feature: ${features}`],
-    cta: `Get ${productName} Today - Special Offer Available!`,
+    key_messages: [`Unmatched quality with ${productName}`, `Crafted for ${targetAudience}`, `Hero Feature: ${features}`],
+    cta: `🔥 Claim Your ${productName} Today - Special Offer Available!`,
   };
 }
 
