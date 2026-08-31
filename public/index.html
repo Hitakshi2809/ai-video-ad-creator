@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎬 FREE AI Ad Creator - Create Professional Product Videos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #667eea;
+      --secondary: #764ba2;
+      --success: #48bb78;
+      --danger: #f56565;
+      --warning: #ed8936;
+      --dark: #2d3748;
+      --light: #f7fafc;
+      --border: #e2e8f0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .free-badge {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #bbf7d0;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #718096;
+      margin-top: 5px;
+    }
+
+    /* Main Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+
+    /* Provider Box */
+    .provider-box {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .provider-box label {
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    .helper-text {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    .helper-text a {
+      color: #4f46e5;
+      text-decoration: underline;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 16px 32px;
+      font-size: 1.05rem;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--light);
+      color: var(--dark);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #edf2f7;
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .alert-success {
+      background: #f0fdf4;
+      color: var(--success);
+      border-left: 4px solid var(--success);
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .alert-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: inherit;
+    }
+
+    /* Confirmation Modal Dialog Box */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+
+    .modal-overlay.active {
+      display: flex !important;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-body {
+      font-size: 0.95rem;
+      color: #475569;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    /* Progress Bar */
+    .progress-bar-wrapper {
+      margin: 15px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.5s ease;
+      border-radius: 10px;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: #718096;
+      font-weight: 600;
+    }
+
+    /* Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-processing { background: #dbeafe; color: #1e40af; }
+    .status-generating_storyboard { background: #fce7f3; color: #9d174d; }
+    .status-generating_graphics { background: #fed7aa; color: #92400e; }
+    .status-assembling_video { background: #fecdd3; color: #881391; }
+    .status-completed { background: #dcfce7; color: #15803d; }
+    .status-error { background: #fee2e2; color: #991b1b; }
+
+    /* Scene Grid */
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .scene-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .scene-img-container {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .scene-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .scene-content {
+      padding: 15px;
+    }
+
+    .scene-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    .scene-duration {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .scene-text {
+      font-size: 0.88rem;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    /* Projects sidebar list */
+    .project-item {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .project-item:hover {
+      background: #f0f0f0;
+    }
+
+    .project-item.active {
+      border-color: var(--primary);
+      background: #f0f4ff;
+    }
+
+    .project-item-name {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+
+    .project-item-date {
+      font-size: 0.75rem;
+      color: #718096;
+      margin-top: 4px;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .delete-btn:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: #718096;
+    }
+
+    .empty-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div>
+        <h1>🎬 FREE AI Ad Creator</h1>
+        <p style="color: #718096; margin-top: 5px;">Generate product videos instantly using 100% Free AI Keys</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span class="free-badge">✨ 100% Free Mode Active</span>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value" id="stats-total">0</div>
+            <div class="stat-label">Videos Created</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="stats-completed">0</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Alert Container -->
+    <div id="alerts-container"></div>
+
+    <!-- Main Content -->
+    <div class="main-grid">
+      <!-- Form & Progress -->
+      <div>
+        <!-- Create Form -->
+        <div class="card">
+          <h2>📝 Create Your Free AI Ad</h2>
+          <form id="create-form">
+            <!-- AI Engine & Key Choice -->
+            <div class="provider-box">
+              <div class="form-group" style="margin-bottom: 12px;">
+                <label for="aiProvider">Select AI Generator</label>
+                <select id="aiProvider" onchange="handleProviderChange()">
+                  <option value="builtin">🌟 Built-in Smart Free AI (No Key Required - 100% FREE)</option>
+                  <option value="gemini">⚡ Google Gemini Free Tier (Free Key from Google AI Studio)</option>
+                  <option value="openrouter">🦙 OpenRouter Free AI (Free Key)</option>
+                  <option value="anthropic">🤖 Anthropic Claude (API Key)</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="keyGroup" style="margin-bottom: 0; display: none;">
+                <label for="apiKey">API Key (Optional if set in .env)</label>
+                <input type="password" id="apiKey" placeholder="Paste your API key here..." />
+              </div>
+
+              <div class="helper-text" id="providerHelp">
+                🎉 No setup required! Uses built-in AI for storyboards & Pollinations.ai for instant 100% free image generation.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="productName">Product Name *</label>
+              <input
+                type="text"
+                id="productName"
+                placeholder="e.g., UltraFit Noise-Canceling Earbuds"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="features">Key Features *</label>
+              <textarea
+                id="features"
+                placeholder="e.g., 40-hour battery life, IPX7 waterproof, deep bass driver, ergonomic design"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="targetAudience">Target Audience</label>
+              <input
+                type="text"
+                id="targetAudience"
+                placeholder="e.g., Fitness enthusiasts, daily commuters, audio lovers"
+              />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div class="form-group">
+                <label for="tone">Tone</label>
+                <select id="tone">
+                  <option value="energetic">Energetic & Punchy</option>
+                  <option value="professional">Professional & Sleek</option>
+                  <option value="casual">Casual & Friendly</option>
+                  <option value="luxury">Luxury & Premium</option>
+                  <option value="playful">Playful & Fun</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="duration">Duration</label>
+                <select id="duration">
+                  <option value="15">15 seconds</option>
+                  <option value="30">30 seconds</option>
+                  <option value="60">60 seconds</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn">🚀 Create Ad For Free</button>
+          </form>
+        </div>
+
+        <!-- Current Project -->
+        <div id="current-project-container"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar card">
+        <h2 style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span>📜 Video Ad History</span>
+        </h2>
+        <input type="text" id="historySearch" placeholder="🔍 Search video history..." oninput="filterHistory()" style="margin-bottom: 15px; padding: 10px; font-size: 0.88rem;" />
+        <div class="projects-list" id="projects-list">
+          <div class="empty-state">
+            <div class="empty-state-icon">📽️</div>
+            <p>No projects created yet</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/api';
+
+    // State
+    let projects = [];
+    let currentProjectId = null;
+
+    function handleProviderChange() {
+      const provider = document.getElementById('aiProvider').value;
+      const keyGroup = document.getElementById('keyGroup');
+      const helpText = document.getElementById('providerHelp');
+
+      if (provider === 'builtin') {
+        keyGroup.style.display = 'none';
+        helpText.innerHTML = '🎉 No API key needed! Built-in generator creates storyboards & Pollinations.ai generates images 100% free.';
+      } else if (provider === 'gemini') {
+        keyGroup.style.display = 'block';
+        helpText.innerHTML = '⚡ Google Gemini offers generous 100% FREE API tier. <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Free Gemini Key Here</a>';
+      } else if (provider === 'openrouter') {
+        keyGroup.style.display = 'block';
+        helpText.innerHTML = '🦙 OpenRouter provides free Llama 3 & Gemma 2 models. <a href="https://openrouter.ai/keys" target="_blank">Get Key Here</a>';
+      } else if (provider === 'anthropic') {
+        keyGroup.style.display = 'block';
+        helpText.innerHTML = '🤖 Uses Anthropic Claude (Paste your key or set ANTHROPIC_API_KEY in .env).';
+      }
+    }
+
+    function showAlert(message, type = 'success') {
+      const container = document.getElementById('alerts-container');
+      const alertEl = document.createElement('div');
+      alertEl.className = `alert alert-${type}`;
+      alertEl.innerHTML = `
+        <span>${message}</span>
+        <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+      `;
+      container.appendChild(alertEl);
+      setTimeout(() => alertEl.remove(), 6000);
+    }
+
+    document.getElementById('create-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Starting Generator...';
+
+      const formData = {
+        productName: document.getElementById('productName').value,
+        features: document.getElementById('features').value,
+        targetAudience: document.getElementById('targetAudience').value,
+        tone: document.getElementById('tone').value,
+        duration: parseInt(document.getElementById('duration').value),
+        provider: document.getElementById('aiProvider').value,
+        apiKey: document.getElementById('apiKey').value,
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/create-ad`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to create ad');
+        }
+
+        const data = await response.json();
+        currentProjectId = data.projectId;
+
+        showAlert(`🚀 Free Ad creation started! (Project #${data.projectId})`, 'success');
+        document.getElementById('create-form').reset();
+        handleProviderChange();
+
+        await loadProjects();
+        displayProject(currentProjectId);
+      } catch (error) {
+        showAlert(`❌ ${error.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 Create Ad For Free';
+      }
+    });
+
+    async function loadProjects() {
+      try {
+        const response = await fetch(`${API_URL}/projects`);
+        projects = await response.json();
+
+        document.getElementById('stats-total').textContent = projects.length;
+        document.getElementById('stats-completed').textContent = projects.filter(p => p.status === 'completed').length;
+
+        filterHistory();
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+      }
+    }
+
+    function filterHistory() {
+      const query = (document.getElementById('historySearch')?.value || '').toLowerCase().trim();
+      const filtered = projects.filter(p => p.product_name.toLowerCase().includes(query) || (p.target_audience || '').toLowerCase().includes(query));
+      renderHistoryList(filtered);
+    }
+
+    function renderHistoryList(items) {
+      const projectsList = document.getElementById('projects-list');
+      if (!items || items.length === 0) {
+        projectsList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📽️</div>
+            <p>No video ads found in history</p>
+          </div>
+        `;
+        return;
+      }
+
+      projectsList.innerHTML = items.map(project => `
+        <div class="project-item ${currentProjectId === project.id ? 'active' : ''}" onclick="selectProject(${project.id})">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+            <div class="project-item-name">${project.product_name}</div>
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteProject(${project.id})" title="Delete video from history">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span class="status-badge status-${project.status}" style="font-size: 0.72rem; padding: 2px 8px;">
+              ${getStatusLabel(project.status)}
+            </span>
+            <div class="project-item-date">#${project.id} • ${new Date(project.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectProject(projectId) {
+      currentProjectId = projectId;
+      filterHistory();
+      displayProject(projectId);
+    }
+
+    let projectToDeleteId = null;
+
+    function deleteProject(projectId) {
+      const proj = projects.find(p => String(p.id) === String(projectId));
+      projectToDeleteId = projectId;
+
+      const modalText = document.getElementById('deleteModalText');
+      if (modalText) {
+        modalText.innerHTML = `Are you sure you want to delete <strong>"${proj ? proj.product_name : 'this video ad'}"</strong> from history?`;
+      }
+
+      const modal = document.getElementById('deleteModal');
+      if (modal) {
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+      }
+
+      const confirmBtn = document.getElementById('confirmDeleteBtn');
+      if (confirmBtn) {
+        confirmBtn.onclick = () => confirmDeleteProject(projectId);
+      }
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('deleteModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+      projectToDeleteId = null;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDeleteModal();
+    });
+
+    async function confirmDeleteProject(projectId) {
+      closeDeleteModal();
+      try {
+        await fetch(`${API_URL}/project/${projectId}`, { method: 'DELETE' });
+        if (currentProjectId === projectId) {
+          currentProjectId = null;
+          document.getElementById('current-project-container').innerHTML = '';
+        }
+        await loadProjects();
+      } catch (e) {
+        showAlert('❌ Failed to delete project', 'error');
+      }
+    }
+
+    function createFallbackSvgImage(productName, visualDesc, sceneNumber) {
+      const bgColors = ['#1e1b4b', '#064e3b', '#4c1d95', '#831843', '#1e293b'];
+      const accentColors = ['#6366f1', '#10b981', '#a855f7', '#ec4899', '#3b82f6'];
+      const num = sceneNumber || 1;
+      const bg = bgColors[(num - 1) % bgColors.length];
+      const accent = accentColors[(num - 1) % accentColors.length];
+      const cleanTitle = String(productName || 'Product Commercial').replace(/[<>&"]/g, '');
+      const cleanDesc = String(visualDesc || 'Commercial Scene Highlight').substring(0, 55).replace(/[<>&"]/g, '');
+      
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+        <defs>
+          <linearGradient id="g${num}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${bg}"/>
+            <stop offset="100%" stop-color="#020617"/>
+          </linearGradient>
+          <linearGradient id="a${num}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="${accent}"/>
+            <stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+        </defs>
+        <rect width="1280" height="720" fill="url(#g${num})"/>
+        <circle cx="960" cy="360" r="280" fill="${accent}" opacity="0.18"/>
+        <circle cx="320" cy="180" r="180" fill="#38bdf8" opacity="0.12"/>
+        <rect x="80" y="70" width="160" height="36" rx="18" fill="url(#a${num})"/>
+        <text x="160" y="93" font-family="-apple-system, sans-serif" font-weight="bold" font-size="16" fill="#ffffff" text-anchor="middle">SCENE ${num}</text>
+        <text x="80" y="260" font-family="-apple-system, sans-serif" font-weight="900" font-size="52" fill="#ffffff">${cleanTitle}</text>
+        <text x="80" y="330" font-family="-apple-system, sans-serif" font-weight="600" font-size="28" fill="${accent}">${cleanDesc}</text>
+        <rect x="80" y="630" width="1120" height="4" fill="url(#a${num})"/>
+      </svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    async function displayProject(projectId) {
+      try {
+        const response = await fetch(`${API_URL}/project/${projectId}`);
+        const project = await response.json();
+        const container = document.getElementById('current-project-container');
+
+        // Safely parse storyboard if string
+        if (typeof project.storyboard === 'string') {
+          try { project.storyboard = JSON.parse(project.storyboard); } catch (e) {}
+        }
+
+        // Fallback to scenes array if storyboard object structure is absent
+        if (!project.storyboard || !project.storyboard.scenes) {
+          if (project.scenes && project.scenes.length) {
+            project.storyboard = {
+              title: `Discover ${project.product_name}`,
+              hook: `Experience ${project.product_name} today!`,
+              scenes: project.scenes,
+              cta: `Get ${project.product_name} Today!`
+            };
+          }
+        }
+
+        const statusProgress = {
+          'processing': 20,
+          'generating_storyboard': 40,
+          'generating_graphics': 70,
+          'assembling_video': 90,
+          'completed': 100,
+          'error': 0,
+        };
+
+        const progress = statusProgress[project.status] || 0;
+
+        let html = `
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
+              <div>
+                <h2>${project.product_name}</h2>
+                <div style="font-size: 0.85rem; color: #64748b; margin-top: 2px;">
+                  Target: ${project.target_audience || 'General'} | Duration: ${project.duration}s | Tone: ${project.tone}
+                </div>
+              </div>
+              <span class="status-badge status-${project.status}">
+                ${getStatusLabel(project.status)}
+              </span>
+            </div>
+
+            <div class="progress-bar-wrapper">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-text">${progress}% Complete</div>
+            </div>
+        `;
+
+        if (project.error_message) {
+          html += `
+            <div class="alert alert-error">
+              <span>❌ Error: ${project.error_message}</span>
+            </div>
+          `;
+        }
+
+        // Interactive Video Showcase Player
+        if ((project.status === 'completed' || (project.storyboard && project.storyboard.scenes)) && project.storyboard && project.storyboard.scenes) {
+          const scenesList = project.storyboard.scenes;
+          const assetsMap = new Map();
+          if (project.assets) {
+            project.assets.forEach(a => {
+              assetsMap.set(String(a.scene_id), a.url);
+              assetsMap.set(Number(a.scene_id), a.url);
+            });
+          }
+
+          const scene1Img = assetsMap.get(1) || assetsMap.get('1') || `https://image.pollinations.ai/prompt/${encodeURIComponent(project.product_name + ' commercial product photography 4k')}?width=1280&height=720&nologo=true`;
+          const scene1Fallback = createFallbackSvgImage(project.product_name, scenesList[0]?.visual_description, 1);
+
+          html += `
+            <div style="margin-top: 20px; background: #0f172a; border-radius: 12px; padding: 20px; color: white;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px;">
+                  🎬 Video Commercial Preview
+                </h3>
+                <span id="playerSceneBadge" style="background: #3b82f6; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                  Scene 1 of ${scenesList.length}
+                </span>
+              </div>
+
+              <!-- 16:9 Video Canvas Screen -->
+              <div id="videoScreen" style="width: 100%; aspect-ratio: 16/9; background: #020617; border-radius: 8px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
+                <img id="playerImage" src="${scene1Img}" onerror="this.onerror=null; this.src='${scene1Fallback}';" style="width: 100%; height: 100%; object-fit: cover; transition: transform 4s ease-out;" />
+                
+                <!-- Voiceover Subtitle Overlay -->
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 20px; text-align: center;">
+                  <div id="playerMusicMood" style="color: #60a5fa; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
+                    🎵 ${scenesList[0]?.music_mood || 'Upbeat Ambient'}
+                  </div>
+                  <div id="playerVoiceover" style="color: white; font-size: 1.05rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                    "${scenesList[0]?.voiceover_script || ''}"
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video Controls -->
+              <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="playAdBtn" onclick="toggleAdPlayback(${project.id})" style="flex: 2; min-width: 180px; padding: 12px; font-size: 1rem;">
+                  ▶️ Play Video Commercial
+                </button>
+                <button class="btn btn-secondary" onclick="exportVideoFile(${project.id})" style="padding: 12px 16px; width: auto; background: #059669; color: white; font-weight: 600;">
+                  🎥 Download MP4 Video
+                </button>
+                <button class="btn btn-secondary" id="heroModeBtn" onclick="toggleHeroMode()" style="padding: 12px 16px; width: auto; background: #3730a3; color: white;">
+                  📸 Camera: Single Master Hero
+                </button>
+                <button class="btn btn-secondary" onclick="regenerateCohesiveVisuals(${project.id})" style="padding: 12px 16px; width: auto;">
+                  🎨 Refresh Visual Theme
+                </button>
+                <button class="btn btn-secondary" onclick="exportAdScript(${project.id})" style="padding: 12px 16px; width: auto;">
+                  📥 Export Script
+                </button>
+                <button class="btn btn-secondary" onclick="restartAdPlayback(${project.id})" style="padding: 12px 16px; width: auto;">
+                  🔄 Replay
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        if (project.storyboard) {
+          html += `
+            <div style="margin-top: 25px;">
+              <h3 style="font-size: 1.15rem; margin-bottom: 8px;">📖 ${project.storyboard.title || 'Generated Storyboard'}</h3>
+              <p style="color: #475569; font-style: italic; margin-bottom: 15px;">"${project.storyboard.hook || ''}"</p>
+          `;
+
+          const assetsMap = new Map();
+          if (project.assets) {
+            project.assets.forEach(a => {
+              assetsMap.set(String(a.scene_id), a.url);
+              assetsMap.set(Number(a.scene_id), a.url);
+            });
+          }
+
+          if (project.storyboard.scenes) {
+            const projSeed = ((project.id * 31337) % 899999) + 100000;
+            const colorTheme = (project.storyboard && project.storyboard.color_palette) ? project.storyboard.color_palette.join(', ') : 'sleek modern commercial studio';
+            html += `<div class="scene-grid">`;
+            project.storyboard.scenes.forEach(scene => {
+              const ultraPrompt = `crystal clear ultra hd 8k commercial product advertisement photoshoot of ${project.product_name}, scene ${scene.scene_number}: ${scene.visual_description}, ${colorTheme}, award winning studio photography, pin sharp focus, high contrast, professional 35mm lens, 16:9 widescreen, hyperdetailed`;
+              const imgUrl = assetsMap.get(scene.scene_number) || assetsMap.get(String(scene.scene_number)) || `https://image.pollinations.ai/prompt/${encodeURIComponent(ultraPrompt)}?width=1920&height=1080&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+              const fallbackUrl = createFallbackSvgImage(project.product_name, scene.visual_description, scene.scene_number);
+              const safeScript = (scene.voiceover_script || '').replace(/'/g, "\\'");
+              html += `
+                <div class="scene-card">
+                  <div class="scene-img-container">
+                    <img src="${imgUrl}" onerror="this.onerror=null; this.src='${fallbackUrl}';" alt="Scene ${scene.scene_number}" loading="lazy" />
+                  </div>
+                  <div class="scene-content">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div class="scene-title">Scene ${scene.scene_number} (${scene.duration}s)</div>
+                      <button onclick="speakText('${safeScript}')" style="background:#e0e7ff; color:#3730a3; border:none; padding:3px 8px; border-radius:12px; font-size:0.75rem; cursor:pointer; font-weight:600;">🔊 Speak</button>
+                    </div>
+                    <div class="scene-duration">🎵 ${scene.music_mood}</div>
+                    <div class="scene-text"><strong>Visual:</strong> ${scene.visual_description}</div>
+                    <div class="scene-text"><strong>Voiceover:</strong> "${scene.voiceover_script}"</div>
+                  </div>
+                </div>
+              `;
+            });
+            html += `</div>`;
+          }
+
+          if (project.storyboard.cta) {
+            html += `
+              <div style="margin-top: 15px; background: #eef2ff; border-left: 4px solid #4f46e5; padding: 12px; border-radius: 6px;">
+                <strong>📢 Call to Action:</strong> ${project.storyboard.cta}
+              </div>
+            `;
+          }
+
+          html += `</div>`;
+        }
+
+        html += `</div>`;
+        container.innerHTML = html;
+
+        if (project.status !== 'completed' && project.status !== 'error') {
+          setTimeout(() => pollProject(projectId), 1500);
+        }
+      } catch (error) {
+        console.error('Failed to display project:', error);
+      }
+    }
+
+    async function pollProject(projectId) {
+      if (currentProjectId !== projectId) return;
+      displayProject(projectId);
+    }
+
+    function getStatusLabel(status) {
+      const labels = {
+        'processing': '⏳ Processing',
+        'generating_storyboard': '✍️ Writing Storyboard',
+        'generating_graphics': '🎨 Generating Free AI Visuals',
+        'assembling_video': '🎬 Finalizing Preview',
+        'completed': '✅ Complete!',
+        'error': '❌ Error',
+      };
+      return labels[status] || status;
+    }
+
+    let adPlaybackTimer = null;
+    let currentPlaybackScene = 0;
+    let isPlayingAd = false;
+    let isVoiceMuted = false;
+    let isSingleHeroMode = true; // Default to Single Master Hero camera slideshow!
+
+    function toggleHeroMode() {
+      isSingleHeroMode = !isSingleHeroMode;
+      const btn = document.getElementById('heroModeBtn');
+      if (btn) {
+        btn.textContent = isSingleHeroMode ? '📸 Camera: Single Master Hero' : '🖼️ Camera: Multi Scene';
+        btn.style.background = isSingleHeroMode ? '#3730a3' : '#475569';
+      }
+    }
+
+    function toggleVoiceMute() {
+      isVoiceMuted = !isVoiceMuted;
+      const btn = document.getElementById('muteVoiceBtn');
+      if (btn) btn.textContent = isVoiceMuted ? '🔇 Voice: OFF' : '🔊 Voice: ON';
+      if (isVoiceMuted && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const voice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+      if (voice) utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleAdPlayback(projectId) {
+      if (isPlayingAd) {
+        stopAdPlayback();
+      } else {
+        startAdPlayback(projectId);
+      }
+    }
+
+    async function startAdPlayback(projectId) {
+      const proj = projects.find(p => p.id === projectId) || await (await fetch(`${API_URL}/project/${projectId}`)).json();
+      if (!proj || !proj.storyboard || !proj.storyboard.scenes) return;
+
+      const scenes = proj.storyboard.scenes;
+      const assetsMap = new Map();
+      if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
+
+      const projSeed = ((proj.id * 31337) % 899999) + 100000;
+      const masterHeroPrompt = `crystal clear ultra hd 8k commercial hero product photoshoot of ${proj.product_name}, studio lighting, pin sharp focus, 35mm lens, 16:9, hyperdetailed`;
+      const masterHeroUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent(masterHeroPrompt)}?width=1920&height=1080&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+
+      isPlayingAd = true;
+      const btn = document.getElementById('playAdBtn');
+      if (btn) btn.textContent = '⏸️ Pause Commercial';
+
+      function playNextScene() {
+        if (!isPlayingAd) return;
+
+        // Cancel any previous voiceover speech immediately
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+        if (currentPlaybackScene >= scenes.length) {
+          // Show Final Call-To-Action Screen when commercial ends
+          const voEl = document.getElementById('playerVoiceover');
+          const moodEl = document.getElementById('playerMusicMood');
+          const badgeEl = document.getElementById('playerSceneBadge');
+          if (badgeEl) badgeEl.textContent = '📢 Call to Action';
+          if (moodEl) moodEl.textContent = '🎉 Commercial Finale';
+          if (voEl) voEl.innerHTML = `<span style="color:#f59e0b; font-size:1.2rem; font-weight:800;">${proj.storyboard.cta || 'Get Started Today!'}</span>`;
+          
+          setTimeout(() => {
+            currentPlaybackScene = 0;
+            stopAdPlayback();
+          }, 3500);
+          return;
+        }
+
+        const scene = scenes[currentPlaybackScene];
+        const sceneSpecificImg = assetsMap.get(String(scene.scene_number)) || `https://image.pollinations.ai/prompt/${encodeURIComponent(proj.product_name + ' ' + scene.visual_description + ' commercial photography')}?width=1280&height=720&model=flux&nologo=true&seed=${projSeed}`;
+
+        // Select Master Hero Image (100% Cohesive Camera Pan & Zoom) or Scene-Specific Image
+        const imgUrl = isSingleHeroMode ? masterHeroUrl : sceneSpecificImg;
+
+        const imgEl = document.getElementById('playerImage');
+        const voEl = document.getElementById('playerVoiceover');
+        const moodEl = document.getElementById('playerMusicMood');
+        const badgeEl = document.getElementById('playerSceneBadge');
+
+        // Clear previous content immediately before loading new scene
+        if (voEl) voEl.textContent = '';
+        
+        // Dynamic Camera Pan & Zoom Motion Patterns (Ken Burns Camera Engine)
+        const cameraMotions = [
+          { transform: 'scale(1.22)', position: '50% 50%' }, // Scene 1: Smooth Wide Zoom-In
+          { transform: 'scale(1.38)', position: '20% 30%' }, // Scene 2: Pan-Focus Top-Left Detail
+          { transform: 'scale(1.35)', position: '80% 70%' }, // Scene 3: Pan-Focus Bottom-Right Detail
+          { transform: 'scale(1.08)', position: '50% 50%' }, // Scene 4: Hero Center Zoom-Out
+        ];
+
+        const motion = cameraMotions[currentPlaybackScene % cameraMotions.length];
+
+        if (imgEl) {
+          imgEl.style.transition = 'none';
+          imgEl.style.transform = 'scale(1)';
+          imgEl.style.objectPosition = '50% 50%';
+          imgEl.src = imgUrl;
+
+          setTimeout(() => {
+            if (imgEl) {
+              const durSec = (scene.duration || 4);
+              imgEl.style.transition = `transform ${durSec}s cubic-bezier(0.25, 1, 0.5, 1), object-position ${durSec}s cubic-bezier(0.25, 1, 0.5, 1)`;
+              imgEl.style.transform = motion.transform;
+              imgEl.style.objectPosition = motion.position;
+            }
+          }, 60);
+        }
+
+        if (voEl) voEl.textContent = `"${scene.voiceover_script}"`;
+        if (moodEl) moodEl.textContent = `🎵 ${scene.music_mood}`;
+        if (badgeEl) badgeEl.textContent = `Scene ${currentPlaybackScene + 1} of ${scenes.length}`;
+
+        // Trigger AI Speech Voiceover Narration strictly for this scene
+        if (!isVoiceMuted && scene.voiceover_script) {
+          speakText(scene.voiceover_script);
+        }
+
+        const dur = (scene.duration || 4) * 1000;
+        currentPlaybackScene++;
+
+        adPlaybackTimer = setTimeout(() => {
+          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+          playNextScene();
+        }, dur);
+      }
+
+      playNextScene();
+    }
+
+    function stopAdPlayback() {
+      isPlayingAd = false;
+      if (adPlaybackTimer) clearTimeout(adPlaybackTimer);
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      const btn = document.getElementById('playAdBtn');
+      if (btn) btn.textContent = '▶️ Play Video & Voiceover';
+    }
+
+    function regenerateCohesiveVisuals(projectId) {
+      const proj = projects.find(p => p.id === projectId);
+      if (!proj || !proj.storyboard || !proj.storyboard.scenes) return;
+
+      const newSeed = Math.floor(Math.random() * 899999) + 100000;
+      const colorTheme = (proj.storyboard.color_palette) ? proj.storyboard.color_palette.join(', ') : 'sleek commercial studio';
+
+      if (!proj.assets) proj.assets = [];
+
+      proj.storyboard.scenes.forEach(scene => {
+        const ultraPrompt = `hyperrealistic 8k commercial product advertisement photoshoot of ${proj.product_name}, scene ${scene.scene_number}: ${scene.visual_description}, ${colorTheme}, award winning film still, studio lighting, depth of field, sharp focus, professional 35mm lens photography, 16:9 widescreen`;
+        const newUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(ultraPrompt)}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${newSeed}`;
+
+        const existing = proj.assets.find(a => String(a.scene_id) === String(scene.scene_number));
+        if (existing) {
+          existing.url = newUrl;
+        } else {
+          proj.assets.push({ scene_id: scene.scene_number, url: newUrl });
+        }
+      });
+
+      showAlert('🎨 Visual theme refreshed with single-video consistency!', 'success');
+      displayProject(projectId);
+    }
+
+    async function exportVideoFile(projectId) {
+      const proj = projects.find(p => p.id === projectId);
+      if (!proj || !proj.storyboard || !proj.storyboard.scenes) return;
+
+      showAlert('🎬 Rendering MP4 Video Commercial file...', 'info');
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1280;
+      canvas.height = 720;
+      const ctx = canvas.getContext('2d');
+
+      const stream = canvas.captureStream(30);
+      const recordedChunks = [];
+      
+      let mimeType = 'video/webm;codecs=vp9';
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${proj.product_name.replace(/\s+/g, '_')}_Video_Commercial.mp4`;
+        a.click();
+        showAlert('🎉 MP4 Video Commercial downloaded successfully!', 'success');
+      };
+
+      mediaRecorder.start();
+
+      const scenes = proj.storyboard.scenes;
+      const assetsMap = new Map();
+      if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
+      const projSeed = ((proj.id * 31337) % 899999) + 100000;
+      const masterHeroUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent('hyperrealistic 8k commercial hero product photoshoot of ' + proj.product_name + ', studio lighting, 35mm lens, 16:9')}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+
+      let currentSceneIdx = 0;
+      let frameInScene = 0;
+      const fps = 30;
+
+      function renderNextFrame() {
+        if (currentSceneIdx >= scenes.length) {
+          // Draw Finale Call to Action Screen
+          ctx.fillStyle = '#020617';
+          ctx.fillRect(0, 0, 1280, 720);
+
+          ctx.fillStyle = '#60a5fa';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('📢 COMMERCIAL FINALE', 640, 240);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 54px sans-serif';
+          ctx.fillText(proj.product_name, 640, 340);
+
+          ctx.fillStyle = '#f59e0b';
+          ctx.font = 'bold 36px sans-serif';
+          ctx.fillText(proj.storyboard.cta || 'Get Started Today!', 640, 440);
+
+          frameInScene++;
+          if (frameInScene < fps * 3) {
+            requestAnimationFrame(renderNextFrame);
+          } else {
+            mediaRecorder.stop();
+          }
+          return;
+        }
+
+        const scene = scenes[currentSceneIdx];
+        const targetImgUrl = isSingleHeroMode ? masterHeroUrl : (assetsMap.get(String(scene.scene_number)) || masterHeroUrl);
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          ctx.clearRect(0, 0, 1280, 720);
+          ctx.drawImage(img, 0, 0, 1280, 720);
+
+          // Subtitle Overlay Bar
+          const grad = ctx.createLinearGradient(0, 560, 0, 720);
+          grad.addColorStop(0, 'rgba(0,0,0,0)');
+          grad.addColorStop(1, 'rgba(0,0,0,0.88)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 560, 1280, 160);
+
+          ctx.fillStyle = '#60a5fa';
+          ctx.font = 'bold 22px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`🎵 ${scene.music_mood}`, 640, 620);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 32px sans-serif';
+          ctx.fillText(`"${scene.voiceover_script}"`, 640, 675);
+
+          frameInScene++;
+          const sceneMaxFrames = (scene.duration || 4) * fps;
+          if (frameInScene >= sceneMaxFrames) {
+            frameInScene = 0;
+            currentSceneIdx++;
+          }
+          requestAnimationFrame(renderNextFrame);
+        };
+
+        img.onerror = () => {
+          // SVG Fallback Frame
+          ctx.fillStyle = '#1e1b4b';
+          ctx.fillRect(0, 0, 1280, 720);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 48px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(proj.product_name, 640, 320);
+
+          ctx.fillStyle = '#60a5fa';
+          ctx.font = 'bold 26px sans-serif';
+          ctx.fillText(`Scene ${scene.scene_number}: ${scene.visual_description.substring(0, 50)}`, 640, 400);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 30px sans-serif';
+          ctx.fillText(`"${scene.voiceover_script}"`, 640, 660);
+
+          frameInScene++;
+          const sceneMaxFrames = (scene.duration || 4) * fps;
+          if (frameInScene >= sceneMaxFrames) {
+            frameInScene = 0;
+            currentSceneIdx++;
+          }
+          requestAnimationFrame(renderNextFrame);
+        };
+
+        img.src = targetImgUrl;
+      }
+
+      renderNextFrame();
+    }
+
+    function exportAdScript(projectId) {
+      const proj = projects.find(p => p.id === projectId);
+      if (!proj || !proj.storyboard) return;
+
+      const sb = proj.storyboard;
+      let text = `====================================================\n`;
+      text += `🎬 COMMERCIAL PRODUCTION SCRIPT & SPECIFICATION SHEET\n`;
+      text += `====================================================\n\n`;
+      text += `Product Name: ${proj.product_name}\n`;
+      text += `Target Audience: ${proj.target_audience || 'General'}\n`;
+      text += `Tone: ${proj.tone}\n`;
+      text += `Duration: ${proj.duration} seconds\n`;
+      text += `Title: ${sb.title || ''}\n`;
+      text += `Hook: "${sb.hook || ''}"\n\n`;
+      text += `----------------------------------------------------\n`;
+      text += `SCENE BREAKDOWN & VOICEOVER SCRIPT\n`;
+      text += `----------------------------------------------------\n\n`;
+
+      if (sb.scenes) {
+        sb.scenes.forEach(s => {
+          text += `[SCENE ${s.scene_number}] (${s.duration}s)\n`;
+          text += `• Visual: ${s.visual_description}\n`;
+          text += `• Voiceover: "${s.voiceover_script}"\n`;
+          text += `• Music Mood: ${s.music_mood}\n\n`;
+        });
+      }
+
+      if (sb.cta) text += `📢 CALL TO ACTION: ${sb.cta}\n`;
+
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${proj.product_name.replace(/\s+/g, '_')}_Commercial_Script.txt`;
+      a.click();
+      showAlert('📥 Commercial script downloaded!', 'success');
+    }
+
+    async function init() {
+      await loadProjects();
+    }
+
+    init();
+  </script>
+
+  <!-- Confirmation Dialog Modal -->
+  <div class="modal-overlay" id="deleteModal" onclick="if(event.target===this) closeDeleteModal()">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span style="color: #ef4444;">🗑️</span> Delete Video Commercial
+      </div>
+      <div class="modal-body" id="deleteModalText">
+        Are you sure you want to delete this video ad from history?
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()" style="width: auto; padding: 10px 20px;">
+          No, Cancel
+        </button>
+        <button class="btn btn-danger" id="confirmDeleteBtn" style="width: auto; padding: 10px 20px;">
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
