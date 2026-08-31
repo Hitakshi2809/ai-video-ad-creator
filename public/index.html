@@ -580,6 +580,20 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <label for="brandLogoInput" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>🏷️ Brand Logo & Watermark Overlay (Optional)</span>
+                <span id="logoFileName" style="font-size: 0.75rem; color: #10b981; font-weight: 600;"></span>
+              </label>
+              <input
+                type="file"
+                id="brandLogoInput"
+                accept="image/*"
+                onchange="handleLogoUpload(event)"
+                style="padding: 8px; font-size: 0.85rem; background: #f8fafc; border: 1px dashed #cbd5e1; cursor: pointer;"
+              />
+            </div>
+
             <button type="submit" class="btn btn-primary" id="submitBtn">🚀 Create Ad For Free</button>
           </form>
         </div>
@@ -610,6 +624,27 @@
     // State
     let projects = [];
     let currentProjectId = null;
+    let uploadedBrandLogoDataUrl = null;
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedBrandLogoDataUrl = e.target.result;
+          const fileNameEl = document.getElementById('logoFileName');
+          if (fileNameEl) fileNameEl.textContent = '✅ ' + file.name;
+          showAlert('🏷️ Custom brand logo uploaded successfully!', 'success');
+          
+          const waterEl = document.getElementById('videoWatermarkLogo');
+          if (waterEl) {
+            waterEl.src = uploadedBrandLogoDataUrl;
+            waterEl.style.display = 'inline-block';
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
     function handleProviderChange() {
       const provider = document.getElementById('aiProvider').value;
@@ -925,6 +960,12 @@
               <div id="videoScreen" style="width: 100%; aspect-ratio: 16/9; background: #020617; border-radius: 8px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
                 <img id="playerImage" src="${scene1Img}" onerror="this.onerror=null; this.src='${scene1Fallback}';" style="width: 100%; height: 100%; object-fit: cover; transition: transform 4s ease-out;" />
                 
+                <!-- Glowing Brand Watermark Badge Overlay -->
+                <div id="brandWatermarkOverlay" style="position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 20px; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                  <img id="videoWatermarkLogo" src="${uploadedBrandLogoDataUrl || ''}" style="height: 22px; max-width: 90px; object-fit: contain; ${uploadedBrandLogoDataUrl ? '' : 'display: none;'}" />
+                  <span style="color: #f8fafc; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px;">${project.product_name}</span>
+                </div>
+
                 <!-- Voiceover Subtitle Overlay -->
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 20px; text-align: center;">
                   <div id="playerMusicMood" style="color: #60a5fa; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
@@ -1317,6 +1358,32 @@
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 32px sans-serif';
           ctx.fillText(`"${scene.voiceover_script}"`, 640, 675);
+
+          // Draw Brand Logo Watermark Overlay on Canvas Frame
+          if (uploadedBrandLogoDataUrl) {
+            const logoImg = new Image();
+            logoImg.src = uploadedBrandLogoDataUrl;
+            if (logoImg.complete && logoImg.naturalWidth > 0) {
+              const aspect = logoImg.naturalWidth / logoImg.naturalHeight;
+              const logoH = 44;
+              const logoW = Math.min(150, logoH * aspect);
+              ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+              ctx.beginPath();
+              ctx.roundRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12, 16);
+              ctx.fill();
+              ctx.drawImage(logoImg, 1280 - logoW - 30, 26, logoW, logoH);
+            }
+          } else {
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.font = 'bold 20px sans-serif';
+            const textWidth = ctx.measureText(proj.product_name).width;
+            ctx.beginPath();
+            ctx.roundRect(1280 - textWidth - 50, 20, textWidth + 30, 44, 16);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'right';
+            ctx.fillText(proj.product_name, 1250, 50);
+          }
 
           frameInScene++;
           const sceneMaxFrames = (scene.duration || 4) * fps;
