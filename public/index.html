@@ -558,7 +558,15 @@
               />
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="adLanguage">🌐 Language</label>
+                <select id="adLanguage">
+                  <option value="en">🇬🇧 English</option>
+                  <option value="hi">🇮🇳 Hindi (हिंदी / Hinglish)</option>
+                </select>
+              </div>
+
               <div class="form-group">
                 <label for="tone">Tone</label>
                 <select id="tone">
@@ -691,6 +699,7 @@
         targetAudience: document.getElementById('targetAudience').value,
         tone: document.getElementById('tone').value,
         duration: parseInt(document.getElementById('duration').value),
+        language: document.getElementById('adLanguage').value,
         provider: document.getElementById('aiProvider').value,
         apiKey: document.getElementById('apiKey').value,
       };
@@ -1109,14 +1118,22 @@
       }
     }
 
-    function speakText(text) {
-      if (!('speechSynthesis' in window)) return;
+    function speakText(text, lang = 'en') {
+      if (!('speechSynthesis' in window) || !text) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
+      const isHindi = (lang === 'hi') || /[\u0900-\u097F]/.test(text);
+      utterance.lang = isHindi ? 'hi-IN' : 'en-US';
+
       const voices = window.speechSynthesis.getVoices();
-      const voice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+      let voice = null;
+      if (isHindi) {
+        voice = voices.find(v => v.lang.startsWith('hi') || v.name.toLowerCase().includes('hindi') || v.name.includes('Kalpana') || v.name.includes('Hemant'));
+      } else {
+        voice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+      }
       if (voice) utterance.voice = voice;
       window.speechSynthesis.speak(utterance);
     }

@@ -392,7 +392,12 @@ async function initializeDatabase() {
 /**
  * Generate Storyboard using Gemini, OpenRouter, Anthropic, or Free Built-in Template Engine
  */
-async function generateStoryboardAI({ productName, features, targetAudience, tone, duration, customApiKey, provider }) {
+async function generateStoryboardAI({ productName, features, targetAudience, tone, duration, language, customApiKey, provider }) {
+  const isHindi = (language === 'hi');
+  const langRule = isHindi
+    ? `CRITICAL LANGUAGE RULE: Write the commercial title, hook, voiceover_script, and cta in HINDI / HINGLISH (हिंदी / हिंग्लिश). The script MUST sound like an authentic high-energy Indian TV/viral ad (e.g. 'क्या आप भी परेशान हैं...? अब साधारण से समझौता मत कीजिए! आ गया है...'). Keep visual_description in English for AI image generation.`
+    : `LANGUAGE RULE: Write the commercial title, hook, voiceover_script, and cta in ENGLISH.`;
+
   const prompt = `You are an award-winning Super Bowl & viral commercial copywriter and creative director.
 
 Create an irresistible, high-converting, viral ${duration}-second commercial script for:
@@ -400,11 +405,14 @@ Create an irresistible, high-converting, viral ${duration}-second commercial scr
 - Features: ${features}
 - Audience: ${targetAudience}
 - Tone: ${tone} (make it feel ${tone}, energetic, catchy, and impossible to ignore!)
+- Target Language: ${isHindi ? 'Hindi / Hinglish (हिंदी / हिंग्लिश)' : 'English'}
+
+${langRule}
 
 Copywriting Framework:
 - HOOK: An explosive opening hook line that grabs attention in the first 2 seconds.
 - STORY & PROBLEM: Fast-paced, high-impact narrative highlighting how ${productName} solves problems.
-- VOICE-OVER: Short, rhythmic, ultra-catchy, viral script written for persuasive voiceover delivery.
+- VOICE-OVER: Short, rhythmic, ultra-catchy, viral script written for persuasive voiceover delivery in ${isHindi ? 'Hindi/Hinglish' : 'English'}.
 
 Return ONLY a valid JSON object with this exact structure (no markdown tags, no extra text):
 {
@@ -519,34 +527,47 @@ Rules:
   console.log('🌟 Using Built-in Smart Free AI Generator (No Key Required!)...');
 
   const toneHooks = {
-    energetic: `Stop scrolling! Meet ${productName}—the game-changer you've been waiting for!`,
-    luxury: `Indulge in pure perfection. Experience ${productName}, crafted for the elite.`,
-    humorous: `Think you've seen it all? Think again! ${productName} is here to blow your mind.`,
-    casual: `Hey there! Ready to make everyday 10x easier with ${productName}?`,
-    professional: `Elevate your standards with ${productName}—engineered for ultimate performance.`,
+    energetic: isHindi 
+      ? `रुको मत! आ गया है ${productName}—जो बदल देगा आपकी दुनिया!` 
+      : `Stop scrolling! Meet ${productName}—the game-changer you've been waiting for!`,
+    luxury: isHindi 
+      ? `अनुभव करें असली प्रीमियम क्वालिटी। पेस है ${productName}।` 
+      : `Indulge in pure perfection. Experience ${productName}, crafted for the elite.`,
+    humorous: isHindi 
+      ? `सोचा था सब देख लिया? अब देखिए ${productName} का कमाल!` 
+      : `Think you've seen it all? Think again! ${productName} is here to blow your mind.`,
+    casual: isHindi 
+      ? `सुनिए! अब आपकी लाइफ होगी 10x आसान ${productName} के साथ!` 
+      : `Hey there! Ready to make everyday 10x easier with ${productName}?`,
+    professional: isHindi 
+      ? `अपने काम को दें एक नई ऊंचाई ${productName} के साथ।` 
+      : `Elevate your standards with ${productName}—engineered for ultimate performance.`,
   };
 
-  const selectedHook = toneHooks[tone?.toLowerCase()] || `Ready to revolutionize your world with ${productName}?`;
+  const selectedHook = toneHooks[tone?.toLowerCase()] || (isHindi ? `क्या आप तैयार हैं ${productName} के साथ क्रांति लाने के लिए?` : `Ready to revolutionize your world with ${productName}?`);
 
-  const catchyScript = `Stop settling for ordinary! ${productName} delivers ultimate power with ${features}. Designed specifically for ${targetAudience} who refuse to compromise. Upgrade your lifestyle with ${productName} today!`;
+  const catchyScript = isHindi
+    ? `अब साधारण से समझौता मत कीजिए! ${productName} लाता है ${features} की बेमिसाल ताकत। खास तौर पर बनाया गया है ${targetAudience} के लिए। आज ही पाइए ${productName} और बदलिए अपना अंदाज!`
+    : `Stop settling for ordinary! ${productName} delivers ultimate power with ${features}. Designed specifically for ${targetAudience} who refuse to compromise. Upgrade your lifestyle with ${productName} today!`;
 
   return {
-    title: `🔥 ${productName} Commercial - The Game Changer`,
+    title: isHindi ? `🔥 ${productName} का धमाकेदार विज्ञापन` : `🔥 ${productName} Commercial - The Game Changer`,
     hook: selectedHook,
+    language: isHindi ? 'hi' : 'en',
     scenes: [
       {
         scene_number: 1,
         duration: duration || 15,
         visual_description: `Hyperrealistic 8k master hero commercial photoshoot of ${productName} showcasing ${features} with dramatic studio lighting, 35mm lens, depth of field, and 16:9 widescreen composition.`,
         voiceover_script: catchyScript,
-        music_mood: tone === 'energetic' ? '⚡ High-Energy Beat Drop & Bass' : '🎶 Cinematic Upbeat Commercial Synth',
+        music_mood: tone === 'energetic' ? '⚡ High-Energy Bollywood Beat Drop & Synth' : '🎶 Cinematic Commercial Music',
         visual_elements: [productName, 'Master Hero Spotlight', 'Cinematic Studio Glow'],
       },
     ],
-    music_suggestions: ['Upbeat Commercial Pop', 'Viral Bass Drop Synthwave'],
+    music_suggestions: ['Bollywood Commercial Beats', 'Viral Bass Drop Synthwave'],
     color_palette: ['#4F46E5', '#10B981', '#F59E0B'],
-    key_messages: [`Unmatched quality with ${productName}`, `Crafted for ${targetAudience}`, `Hero Feature: ${features}`],
-    cta: `🔥 Claim Your ${productName} Today - Special Offer Available!`,
+    key_messages: [isHindi ? `${productName} की बेमिसाल क्वालिटी` : `Unmatched quality with ${productName}`, `Crafted for ${targetAudience}`, `Hero Feature: ${features}`],
+    cta: isHindi ? `🔥 आज ही मंगाएं ${productName} - भारी छूट उपलब्ध!` : `🔥 Claim Your ${productName} Today - Special Offer Available!`,
   };
 }
 
@@ -558,7 +579,7 @@ Rules:
  */
 app.post('/api/create-ad', async (req, res) => {
   try {
-    const { productName, features, targetAudience, tone, duration, apiKey, provider } = req.body;
+    const { productName, features, targetAudience, tone, duration, language, apiKey, provider } = req.body;
 
     if (!productName?.trim()) {
       return res.status(400).json({ error: 'Product name is required' });
@@ -574,7 +595,7 @@ app.post('/api/create-ad', async (req, res) => {
     );
 
     const projectId = result.rows[0].id;
-    console.log(`📝 Created project ${projectId}: ${productName}`);
+    console.log(`📝 Created project ${projectId}: ${productName} (Lang: ${language || 'en'})`);
 
     await storyboardQueue.add({
       projectId,
@@ -583,6 +604,7 @@ app.post('/api/create-ad', async (req, res) => {
       targetAudience: targetAudience || 'general audience',
       tone: tone || 'professional',
       duration: duration || 15,
+      language: language || 'en',
       apiKey,
       provider,
     });
@@ -736,10 +758,10 @@ app.delete('/api/project/:projectId', async (req, res) => {
  * Storyboard Worker
  */
 storyboardQueue.process(async (job) => {
-  const { projectId, productName, features, targetAudience, tone, duration, apiKey, provider } = job.data;
+  const { projectId, productName, features, targetAudience, tone, duration, language, apiKey, provider } = job.data;
 
   try {
-    console.log(`✍️  Generating storyboard for project ${projectId}...`);
+    console.log(`✍️  Generating storyboard for project ${projectId} (Lang: ${language || 'en'})...`);
 
     await db.query('UPDATE projects SET status = $1, updated_at = NOW() WHERE id = $2', [
       'generating_storyboard',
@@ -752,6 +774,7 @@ storyboardQueue.process(async (job) => {
       targetAudience,
       tone,
       duration,
+      language,
       customApiKey: apiKey,
       provider,
     });
