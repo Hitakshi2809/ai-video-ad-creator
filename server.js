@@ -673,6 +673,26 @@ app.delete('/api/project/:projectId', async (req, res) => {
 });
 
 /**
+ * GET /api/proxy-image?url=...
+ * Proxy external images with CORS headers to prevent canvas tainting
+ */
+app.get('/api/proxy-image', async (req, res) => {
+  try {
+    const targetUrl = req.query.url;
+    if (!targetUrl) return res.status(400).send('Missing url parameter');
+    const resp = await fetch(targetUrl);
+    if (!resp.ok) return res.status(resp.status).send('Failed to fetch remote image');
+    const buffer = await resp.arrayBuffer();
+    res.setHeader('Content-Type', resp.headers.get('content-type') || 'image/jpeg');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(Buffer.from(buffer));
+  } catch (error) {
+    console.error('Error proxying image:', error);
+    res.status(500).send('Proxy error');
+  }
+});
+
+/**
  * GET /api/project/:projectId/storyboard
  */
 app.get('/api/project/:projectId/storyboard', async (req, res) => {

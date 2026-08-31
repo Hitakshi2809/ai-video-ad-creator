@@ -1265,54 +1265,84 @@
       const proj = projects.find(p => p.id === projectId);
       if (!proj || !proj.storyboard || !proj.storyboard.scenes) return;
 
-      showAlert('🎬 Rendering MP4 Video Commercial file...', 'info');
+      showAlert('🎬 Pre-rendering HD Video Commercial file...', 'info');
 
       const canvas = document.createElement('canvas');
       canvas.width = 1280;
       canvas.height = 720;
       const ctx = canvas.getContext('2d');
 
+      const scenes = proj.storyboard.scenes;
+      const assetsMap = new Map();
+      if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
+      const projSeed = ((proj.id * 31337) % 899999) + 100000;
+      const rawMasterUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent('hyperrealistic 8k commercial hero product photoshoot of ' + proj.product_name + ', studio lighting, 35mm lens, 16:9')}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+
+      // Pre-fetch image via proxy to guarantee clean non-tainted canvas
+      let preloadedImage = null;
+      try {
+        const proxyUrl = `${API_URL}/proxy-image?url=${encodeURIComponent(rawMasterUrl)}`;
+        const resp = await fetch(proxyUrl);
+        if (resp.ok) {
+          const blob = await resp.blob();
+          const objUrl = URL.createObjectURL(blob);
+          const tempImg = new Image();
+          await new Promise((resolve) => {
+            tempImg.onload = resolve;
+            tempImg.onerror = resolve;
+            tempImg.src = objUrl;
+          });
+          if (tempImg.naturalWidth > 0) preloadedImage = tempImg;
+        }
+      } catch (e) {
+        console.warn('Proxy pre-fetch fallback:', e);
+      }
+
       const stream = canvas.captureStream(30);
       const recordedChunks = [];
       
       let mimeType = 'video/webm;codecs=vp9';
       if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = '';
 
-      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      let mediaRecorder = null;
+      if (mimeType) {
+        try {
+          mediaRecorder = new MediaRecorder(stream, { mimeType });
+        } catch(e) {
+          mediaRecorder = new MediaRecorder(stream);
+        }
+      }
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) recordedChunks.push(event.data);
-      };
+      if (mediaRecorder) {
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+        };
 
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: recordedChunks[0]?.type || 'video/mp4' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        const ext = (recordedChunks[0]?.type || '').includes('webm') ? 'webm' : 'mp4';
-        a.download = `${proj.product_name.replace(/\s+/g, '_')}_Video_Commercial.${ext}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 2000);
-        showAlert('🎉 Video Commercial file downloaded successfully!', 'success');
-      };
+        mediaRecorder.onstop = () => {
+          const videoBlob = new Blob(recordedChunks, { type: recordedChunks[0]?.type || 'video/webm' });
+          const downloadUrl = URL.createObjectURL(videoBlob);
+          const a = document.createElement('a');
+          a.href = downloadUrl;
+          const isWebm = (recordedChunks[0]?.type || '').includes('webm');
+          a.download = `${proj.product_name.replace(/\s+/g, '_')}_Video_Commercial.${isWebm ? 'webm' : 'mp4'}`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(downloadUrl), 3000);
+          showAlert('🎉 Video Commercial file downloaded successfully!', 'success');
+        };
 
-      mediaRecorder.start();
-
-      const scenes = proj.storyboard.scenes;
-      const assetsMap = new Map();
-      if (proj.assets) proj.assets.forEach(a => assetsMap.set(String(a.scene_id), a.url));
-      const projSeed = ((proj.id * 31337) % 899999) + 100000;
-      const masterHeroUrl = assetsMap.get('1') || assetsMap.get(1) || `https://image.pollinations.ai/prompt/${encodeURIComponent('hyperrealistic 8k commercial hero product photoshoot of ' + proj.product_name + ', studio lighting, 35mm lens, 16:9')}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${projSeed}`;
+        mediaRecorder.start(100);
+      }
 
       let currentSceneIdx = 0;
       let frameInScene = 0;
       const fps = 30;
 
-      function renderNextFrame() {
+      function renderFrame() {
         if (currentSceneIdx >= scenes.length) {
-          // Draw Finale Call to Action Screen
+          // Draw Finale Screen
           ctx.fillStyle = '#020617';
           ctx.fillRect(0, 0, 1280, 720);
 
@@ -1331,113 +1361,95 @@
 
           frameInScene++;
           if (frameInScene < fps * 3) {
-            requestAnimationFrame(renderNextFrame);
-          } else {
+            requestAnimationFrame(renderFrame);
+          } else if (mediaRecorder && mediaRecorder.state !== 'inactive') {
             mediaRecorder.stop();
           }
           return;
         }
 
         const scene = scenes[currentSceneIdx];
-        const targetImgUrl = isSingleHeroMode ? masterHeroUrl : (assetsMap.get(String(scene.scene_number)) || masterHeroUrl);
 
-        let frameDrawn = false;
-        function drawCanvasFrame(loadedImg) {
-          if (frameDrawn) return;
-          frameDrawn = true;
+        ctx.clearRect(0, 0, 1280, 720);
 
-          ctx.clearRect(0, 0, 1280, 720);
-
-          if (loadedImg && loadedImg.complete && loadedImg.naturalWidth > 0) {
-            try {
-              ctx.drawImage(loadedImg, 0, 0, 1280, 720);
-            } catch (e) {
-              drawCanvasFallback();
-            }
-          } else {
-            drawCanvasFallback();
+        if (preloadedImage && preloadedImage.naturalWidth > 0) {
+          try {
+            ctx.drawImage(preloadedImage, 0, 0, 1280, 720);
+          } catch(e) {
+            drawFallbackBackground();
           }
-
-          // Subtitle Overlay Bar
-          const grad = ctx.createLinearGradient(0, 560, 0, 720);
-          grad.addColorStop(0, 'rgba(0,0,0,0)');
-          grad.addColorStop(1, 'rgba(0,0,0,0.88)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 560, 1280, 160);
-
-          ctx.fillStyle = '#60a5fa';
-          ctx.font = 'bold 22px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(`🎵 ${scene.music_mood}`, 640, 620);
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 30px sans-serif';
-          ctx.fillText(`"${scene.voiceover_script}"`, 640, 675);
-
-          // Draw Brand Logo Watermark Overlay on Canvas Frame
-          if (uploadedBrandLogoDataUrl) {
-            const logoImg = new Image();
-            logoImg.src = uploadedBrandLogoDataUrl;
-            if (logoImg.complete && logoImg.naturalWidth > 0) {
-              const aspect = logoImg.naturalWidth / logoImg.naturalHeight;
-              const logoH = 44;
-              const logoW = Math.min(150, logoH * aspect);
-              ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-              ctx.beginPath();
-              if (ctx.roundRect) ctx.roundRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12, 16);
-              else ctx.fillRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12);
-              ctx.fill();
-              ctx.drawImage(logoImg, 1280 - logoW - 30, 26, logoW, logoH);
-            }
-          } else {
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-            ctx.font = 'bold 20px sans-serif';
-            const textWidth = ctx.measureText(proj.product_name).width;
-            ctx.beginPath();
-            if (ctx.roundRect) ctx.roundRect(1280 - textWidth - 50, 20, textWidth + 30, 44, 16);
-            else ctx.fillRect(1280 - textWidth - 50, 20, textWidth + 30, 44);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'right';
-            ctx.fillText(proj.product_name, 1250, 50);
-          }
-
-          frameInScene++;
-          const sceneMaxFrames = (scene.duration || 4) * fps;
-          if (frameInScene >= sceneMaxFrames) {
-            frameInScene = 0;
-            currentSceneIdx++;
-          }
-          requestAnimationFrame(renderNextFrame);
-        }
-
-        function drawCanvasFallback() {
-          const grad = ctx.createLinearGradient(0, 0, 1280, 720);
-          grad.addColorStop(0, '#0f172a');
-          grad.addColorStop(1, '#1e1b4b');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, 1280, 720);
-
-          ctx.fillStyle = '#6366f1';
-          ctx.font = 'bold 44px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(proj.product_name, 640, 320);
-        }
-
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => drawCanvasFrame(img);
-        img.onerror = () => drawCanvasFrame(null);
-        img.src = targetImgUrl;
-
-        if (img.complete) {
-          drawCanvasFrame(img);
         } else {
-          setTimeout(() => drawCanvasFrame(null), 1000);
+          drawFallbackBackground();
         }
+
+        // Subtitle Overlay Bar
+        const grad = ctx.createLinearGradient(0, 540, 0, 720);
+        grad.addColorStop(0, 'rgba(0,0,0,0)');
+        grad.addColorStop(1, 'rgba(0,0,0,0.9)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 540, 1280, 180);
+
+        ctx.fillStyle = '#60a5fa';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`🎵 ${scene.music_mood}`, 640, 610);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 30px sans-serif';
+        ctx.fillText(`"${scene.voiceover_script}"`, 640, 668);
+
+        // Watermark Overlay
+        if (uploadedBrandLogoDataUrl) {
+          const logoImg = new Image();
+          logoImg.src = uploadedBrandLogoDataUrl;
+          if (logoImg.complete && logoImg.naturalWidth > 0) {
+            const aspect = logoImg.naturalWidth / logoImg.naturalHeight;
+            const logoH = 44;
+            const logoW = Math.min(150, logoH * aspect);
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12, 16);
+            else ctx.fillRect(1280 - logoW - 40, 20, logoW + 20, logoH + 12);
+            ctx.fill();
+            ctx.drawImage(logoImg, 1280 - logoW - 30, 26, logoW, logoH);
+          }
+        } else {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+          ctx.font = 'bold 20px sans-serif';
+          const textWidth = ctx.measureText(proj.product_name).width;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(1280 - textWidth - 50, 20, textWidth + 30, 44, 16);
+          else ctx.fillRect(1280 - textWidth - 50, 20, textWidth + 30, 44);
+          ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'right';
+          ctx.fillText(proj.product_name, 1250, 50);
+        }
+
+        frameInScene++;
+        const sceneMaxFrames = (scene.duration || 4) * fps;
+        if (frameInScene >= sceneMaxFrames) {
+          frameInScene = 0;
+          currentSceneIdx++;
+        }
+
+        requestAnimationFrame(renderFrame);
       }
 
-      renderNextFrame();
+      function drawFallbackBackground() {
+        const bgGrad = ctx.createLinearGradient(0, 0, 1280, 720);
+        bgGrad.addColorStop(0, '#0f172a');
+        bgGrad.addColorStop(1, '#1e1b4b');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1280, 720);
+
+        ctx.fillStyle = '#6366f1';
+        ctx.font = 'bold 44px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(proj.product_name, 640, 320);
+      }
+
+      renderFrame();
     }
 
     function exportAdScript(projectId) {
