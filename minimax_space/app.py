@@ -1,8 +1,6 @@
 import gradio as gr
-try:
-    import torch
-except ImportError:
-    torch = None
+# pyrefly: ignore [missing-import]
+import torch
 import os
 
 # Interactive Demo interface for Alibaba PAI MiniMax-H3-Acc-LoRAs
